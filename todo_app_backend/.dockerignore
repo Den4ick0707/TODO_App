@@ -22,6 +22,12 @@ yarn-error.log*
 # --- Build & Logs ---
 dist/
 build/
+=======
+node_modules/
+npm-debug.log
+
+.env
+
 logs/
 *.log
 npm-debug.log*
@@ -29,3 +35,10 @@ npm-debug.log*
 # --- OS Trash ---
 .DS_Store
 Thumbs.db
+=======
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+.DS_Store
+.cache/
