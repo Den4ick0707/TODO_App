@@ -1,15 +1,10 @@
 {
-  "name": "todo_app_backend",
+  "name": "todo-app-backend",
   "version": "1.0.0",
-  "description": "App for you personal notes",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "start": "node ./bin/www",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./bin/www"
   },
-  "author": "",
-  "license": "ISC",
-
   "dependencies": {
     "cors": "^2.8.6",
     "debug": "~2.6.9",
