@@ -1,18 +1,11 @@
-const ObjectId = require("mongodb").ObjectId;
-
 class TaskModel {
-    _id; // ObjectId
-    title;
-    description;
-    created_at;
-    status;
-
     constructor(data) {
         this.title = data.title;
         this.description = data.description;
         this.status = data.status || 'In progress';
         this.created_at = new Date();
+        this.user_id = data.user_id || null;
     }
 }
 
-
+module.exports = TaskModel;
