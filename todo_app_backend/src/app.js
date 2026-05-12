@@ -1,26 +1,48 @@
 const createError = require('http-errors');
 const express = require('express');
-const path = require('path');
 const logger = require('morgan');
-require('dotenv').config();
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const cors = require('cors');
+require('dotenv').config();
 
 
 const app = express();
 
 app.use(logger('dev'));
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 app.use(express.urlencoded({extended: false}));
 
-// Setting CORS
+// CORS — allow credentials for sessions
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: process.env.FRONTEND_URL || 'http://localhost:8080',
+
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type']
+    allowedHeaders: ['Content-Type'],
+    credentials: true, // required for session cookies
 }));
 
-// Swagger config
+// Session middleware with MongoDB store
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'change_this_secret_in_production',
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGO_URI,
+        dbName: process.env.DB_NAME || 'todo_db',
+        collectionName: 'sessions',
+        ttl: 60 * 60 * 24, // 1 day in seconds
+    }),
+    cookie: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 1000 * 60 * 60 * 24, // 1 day in ms
+    },
+}));
+
+// Swagger
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
@@ -30,9 +52,9 @@ const swaggerOptions = {
         info: {
             title: 'Todo Task API',
             version: '1.0.0',
-            description: 'Документація мого Todo бекенду',
+            description: 'Todo App API with Authentication',
         },
-        servers: [{url: `http://localhost:${process.env.PORT || 3000}`}],
+        servers: [{ url: `http://localhost:${process.env.PORT || 3000}` }],
     },
     apis: ['./src/routes/*.js'],
 };
@@ -40,22 +62,25 @@ const swaggerOptions = {
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-// Connect router to app
+// Routes
 const taskRouter = require('./routes/task_route');
-app.use('/tasks', taskRouter);
+const userRouter = require('./routes/user_route');
+const { requireAuth } = require('./middlewares/auth_middleware');
 
+app.use('/auth', userRouter);
+app.use('/tasks', requireAuth, taskRouter); // all task routes are protected
 
+// 404
 app.use(function (req, res, next) {
     next(createError(404));
 });
 
-
-// Error handling
+// Error handler
 app.use(function (err, req, res, next) {
     const status = err.status || 500;
     res.status(status).json({
         message: err.message,
-        error: process.env.NODE_ENV === 'development' ? err : {}
+        error: process.env.NODE_ENV === 'development' ? err : {},
     });
 });
 
