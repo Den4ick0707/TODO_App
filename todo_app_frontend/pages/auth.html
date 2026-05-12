@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow — Authentication</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="../dist/css/main.min.css">
+</head>
+<body class="auth-page">
+
+<div class="auth-layout" id="authLayout">
+    <div class="auth-layout__brand" id="authBrand">
+        <div class="brand">
+            <div class="brand__mark">
+                <span class="brand__square brand__square--1"></span>
+                <span class="brand__square brand__square--2"></span>
+                <span class="brand__square brand__square--3"></span>
+            </div>
+            <span class="brand__name">TaskFlow</span>
+        </div>
+    </div>
+
+    <div class="auth-layout__panel">
+        <div class="auth-card">
+
+            <div id="loginStep">
+                <div class="auth-card__header">
+                    <h1 class="auth-card__title">Log in</h1>
+                    <p class="auth-card__subtitle">Enter data to log in</p>
+                </div>
+                <form class="auth-form" id="loginForm" novalidate>
+                    <div class="auth-form__field">
+                        <label class="auth-form__label" for="loginEmail">Email</label>
+                        <input class="auth-form__input" type="email" id="loginEmail" placeholder="you@example.com"
+                               required>
+                    </div>
+                    <div class="auth-form__field">
+                        <label class="auth-form__label" for="loginPassword">Password</label>
+                        <div class="auth-form__input-wrap">
+                            <input class="auth-form__input" type="password" id="loginPassword" placeholder="••••••••"
+                                   required>
+                            <button type="button" class="auth-form__toggle-pass">👁️</button>
+                        </div>
+                    </div>
+                    <div class="auth-form__row">
+                        <a href="#" onclick="showStep('forgotStep')" class="auth-form__link">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="btn btn--primary btn--full">Log in</button>
+                    <p class="auth-form__switch">Don`t have an account?
+                        <a href="#" onclick="showStep('registerStep')" class="auth-form__link">
+                            Sing up
+                        </a></p>
+                </form>
+            </div>
+
+            <div id="registerStep" hidden>
+                <div class="auth-card__header">
+                    <h1 class="auth-card__title">Create account</h1>
+                    <p class="auth-card__subtitle">Fill the form</p>
+                </div>
+                <form class="auth-form" id="registerForm" novalidate>
+                    <div class="auth-form__field">
+                        <label class="auth-form__label" for="regUsername">Ім'я користувача</label>
+                        <input class="auth-form__input" type="text" id="regUsername" placeholder="john_doe" required>
+                    </div>
+                    <div class="auth-form__field">
+                        <label class="auth-form__label" for="regEmail">Email</label>
+                        <input class="auth-form__input" type="email" id="regEmail" placeholder="you@example.com"
+                               required>
+                    </div>
+                    <div class="auth-form__field">
+                        <label class="auth-form__label" for="regPassword">Password</label>
+                        <input class="auth-form__input" type="password" id="regPassword" placeholder="••••••••"
+                               required>
+                    </div>
+                    <button type="submit" class="btn btn--primary btn--full">Sing up</button>
+                    <p class="auth-form__switch">Вже є акаунт? <a href="#" onclick="showStep('loginStep')"
+                                                                  class="auth-form__link">Увійти</a></p>
+                </form>
+            </div>
+
+            <div id="forgotStep" hidden>
+                <a href="#" onclick="showStep('loginStep')" class="auth-card__back">Back</a>
+                <div class="auth-card__header">
+                    <h1 class="auth-card__title">Forgot password?</h1>
+                    <p class="auth-card__subtitle">We send instruction on email</p>
+                </div>
+                <form class="auth-form" id="forgotForm">
+                    <div class="auth-form__field">
+                        <label class="auth-form__label" for="forgotEmail">Email</label>
+                        <input class="auth-form__input" type="email" id="forgotEmail" required>
+                    </div>
+                    <button type="submit" class="btn btn--primary btn--full">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showStep(stepId) {
+        const steps = ['loginStep', 'registerStep', 'forgotStep'];
+        steps.forEach(id => {
+            document.getElementById(id).hidden = (id !== stepId);
+        });
+
+        const layout = document.getElementById('authLayout');
+        if (stepId === 'forgotStep') {
+            layout.classList.add('auth-layout--centered');
+            document.getElementById('authBrand').style.display = 'none';
+        } else {
+            layout.classList.remove('auth-layout--centered');
+            document.getElementById('authBrand').style.display = 'flex';
+        }
+    }
+</script>
+<script src="./js/main.min.js"></script>
+</body>
+
+</html>

@@ -6,15 +6,19 @@ const MongoStore = require('connect-mongo');
 const cors = require('cors');
 require('dotenv').config();
 
+
 const app = express();
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+app.use(express.urlencoded({extended: false}));
+
 // CORS — allow credentials for sessions
 app.use(cors({
     origin: process.env.FRONTEND_URL || 'http://localhost:8080',
+
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type'],
     credentials: true, // required for session cookies

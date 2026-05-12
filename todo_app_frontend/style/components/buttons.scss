@@ -1,0 +1,108 @@
+// ============================================
+// BUTTONS
+// ============================================
+
+.btn {
+  @include flex(row, center, center, $space-2);
+  padding: $space-3 $space-5;
+  font-family: $font-display;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: $radius-md;
+  transition: all $transition-fast;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  // Primary
+  &--primary {
+    background: $color-accent;
+    color: $color-bg;
+
+    &:hover {
+      background: lighten($color-accent, 8%);
+      box-shadow: $shadow-accent;
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+
+  // Ghost
+  &--ghost {
+    background: transparent;
+    color: $color-text-2;
+    border: 1px solid $color-border;
+
+    &:hover {
+      border-color: $color-border-2;
+      color: $color-text;
+      background: $color-surface;
+    }
+  }
+
+  // Danger
+  &--danger {
+    background: rgba($color-danger, 0.15);
+    color: $color-danger;
+    border: 1px solid rgba($color-danger, 0.3);
+
+    &:hover {
+      background: $color-danger;
+      color: #fff;
+    }
+  }
+
+  // Sizes
+  &--full { width: 100%; justify-content: center; }
+  &--sm   { padding: $space-2 $space-3; font-size: 0.8rem; }
+
+  // Loader inside button
+  &__loader {
+    @include flex(row, center, center, 4px);
+
+    span {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: btnDot 0.8s ease-in-out infinite;
+
+      &:nth-child(2) { animation-delay: 0.15s; }
+      &:nth-child(3) { animation-delay: 0.3s; }
+    }
+  }
+}
+
+@keyframes btnDot {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40%            { transform: scale(1);   opacity: 1; }
+}
+
+// Icon button
+.icon-btn {
+  @include flex(row, center, center);
+  width: 32px;
+  height: 32px;
+  border-radius: $radius-md;
+  color: $color-text-3;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: $color-surface-2;
+    color: $color-text;
+  }
+
+  &--danger:hover {
+    background: rgba($color-danger, 0.1);
+    color: $color-danger;
+  }
+}

@@ -1,0 +1,386 @@
+// ============================================
+// AUTH LAYOUT
+// ============================================
+
+.auth-page {
+  background: $color-bg;
+}
+
+.auth-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+
+  &--centered {
+    grid-template-columns: 1fr;
+    place-items: center;
+    padding: $space-6;
+  }
+
+  &__brand {
+    @include flex(column, flex-start, space-between);
+    padding: $space-12 $space-10;
+    background: $color-bg-2;
+    border-right: 1px solid $color-border;
+    position: relative;
+    overflow: hidden;
+
+    // Subtle noise texture
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+  }
+
+  &__tagline {
+    margin-top: $space-16;
+
+    &-line {
+      font-size: clamp(2.5rem, 4vw, 4rem);
+      font-weight: 800;
+      line-height: 1.1;
+      color: $color-text-3;
+      letter-spacing: -0.02em;
+
+      &--accent {
+        color: $color-accent;
+      }
+    }
+  }
+
+  &__decoration {
+    align-self: flex-end;
+    opacity: 0.3;
+  }
+
+  &__panel {
+    @include flex(column, center, center);
+    padding: $space-12 $space-10;
+    overflow-y: auto;
+
+    &--solo {
+      width: 100%;
+      max-width: 440px;
+    }
+  }
+
+  @include respond-to('md') {
+    grid-template-columns: 1fr;
+
+    &__brand {
+      display: none;
+    }
+
+    &__panel {
+      padding: $space-8 $space-6;
+    }
+  }
+}
+
+// ============================================
+// BRAND
+// ============================================
+
+.brand {
+  @include flex(row, center, flex-start, $space-3);
+
+  &__mark {
+    position: relative;
+    width: 28px;
+    height: 28px;
+  }
+
+  &__square {
+    position: absolute;
+    border-radius: $radius-sm;
+
+    &--1 {
+      width: 18px;
+      height: 18px;
+      background: $color-accent;
+      top: 0;
+      left: 0;
+    }
+
+    &--2 {
+      width: 12px;
+      height: 12px;
+      background: $color-text-3;
+      bottom: 0;
+      right: 0;
+      opacity: 0.5;
+    }
+
+    &--3 {
+      width: 8px;
+      height: 8px;
+      background: $color-text;
+      bottom: 4px;
+      left: 4px;
+      opacity: 0.3;
+    }
+  }
+
+  &__name {
+    font-size: 1.125rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: $color-text;
+  }
+
+  &--small .brand__mark {
+    width: 22px;
+    height: 22px;
+  }
+
+  &--small .brand__square--1 { width: 14px; height: 14px; }
+  &--small .brand__square--2 { width: 9px; height: 9px; }
+  &--small .brand__square--3 { width: 6px; height: 6px; }
+}
+
+// Decoration grid
+.deco-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $space-3;
+  width: 80px;
+
+  span {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background: $color-border-2;
+  }
+}
+
+// ============================================
+// AUTH CARD
+// ============================================
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+
+  &__back {
+    @include flex(row, center, flex-start, $space-2);
+    font-family: $font-mono;
+    font-size: 0.8rem;
+    color: $color-text-3;
+    margin-bottom: $space-8;
+    transition: color $transition-fast;
+
+    &:hover { color: $color-text-2; }
+  }
+
+  &__header {
+    margin-bottom: $space-8;
+  }
+
+  &__icon {
+    width: 52px;
+    height: 52px;
+    @include flex(row, center, center);
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-lg;
+    color: $color-accent;
+    margin-bottom: $space-5;
+  }
+
+  &__title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: $color-text;
+    margin-bottom: $space-2;
+  }
+
+  &__subtitle {
+    font-size: 0.9rem;
+    color: $color-text-2;
+    font-family: $font-mono;
+  }
+
+  &__status {
+    margin-top: $space-4;
+    padding: $space-3 $space-4;
+    border-radius: $radius-md;
+    font-size: 0.875rem;
+    font-family: $font-mono;
+
+    &--error {
+      background: rgba($color-danger, 0.1);
+      border: 1px solid rgba($color-danger, 0.3);
+      color: $color-danger;
+    }
+
+    &--success {
+      background: rgba($color-success, 0.1);
+      border: 1px solid rgba($color-success, 0.3);
+      color: $color-success;
+    }
+  }
+
+  &__success {
+    text-align: center;
+    padding: $space-6 0;
+
+    &-icon {
+      width: 72px;
+      height: 72px;
+      @include flex(row, center, center);
+      background: rgba($color-accent, 0.1);
+      border: 1px solid rgba($color-accent, 0.3);
+      border-radius: 50%;
+      color: $color-accent;
+      margin: 0 auto $space-6;
+    }
+
+    &-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: $space-3;
+    }
+
+    &-text {
+      font-size: 0.9rem;
+      color: $color-text-2;
+      margin-bottom: $space-8;
+      line-height: 1.7;
+    }
+  }
+}
+
+// ============================================
+// AUTH FORM
+// ============================================
+
+.auth-form {
+  @include flex(column, stretch, flex-start, $space-5);
+
+  &__field {
+    @include flex(column, stretch, flex-start, $space-2);
+
+    &--error .auth-form__input {
+      border-color: $color-danger;
+    }
+
+    &--success .auth-form__input {
+      border-color: $color-success;
+    }
+  }
+
+  &__label {
+    font-size: 0.8rem;
+    font-family: $font-mono;
+    font-weight: 500;
+    color: $color-text-2;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  &__input-wrap {
+    position: relative;
+  }
+
+  &__input {
+    width: 100%;
+    padding: $space-3 $space-4;
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    color: $color-text;
+    font-size: 0.9rem;
+    transition: border-color $transition-fast, box-shadow $transition-fast;
+
+    &::placeholder {
+      color: $color-text-3;
+      font-family: $font-mono;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $color-accent;
+      box-shadow: 0 0 0 3px $color-accent-glow;
+    }
+  }
+
+  &__toggle-pass {
+    position: absolute;
+    right: $space-3;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $color-text-3;
+    padding: $space-1;
+    transition: color $transition-fast;
+
+    &:hover { color: $color-text-2; }
+  }
+
+  &__error {
+    font-size: 0.78rem;
+    font-family: $font-mono;
+    color: $color-danger;
+    min-height: 1em;
+    display: block;
+  }
+
+  &__hint {
+    font-size: 0.78rem;
+    font-family: $font-mono;
+    color: $color-text-3;
+  }
+
+  &__row {
+    @include flex(row, center, flex-end);
+    margin-top: -$space-2;
+  }
+
+  &__link {
+    font-size: 0.85rem;
+    color: $color-accent;
+    font-family: $font-mono;
+    transition: opacity $transition-fast;
+
+    &:hover { opacity: 0.8; }
+  }
+
+  &__switch {
+    text-align: center;
+    font-size: 0.875rem;
+    color: $color-text-2;
+  }
+}
+
+// Password strength indicator
+.password-strength {
+  @include flex(row, center, flex-start, $space-3);
+  margin-top: $space-1;
+
+  &__bars {
+    @include flex(row, center, flex-start, $space-1);
+  }
+
+  &__bar {
+    width: 32px;
+    height: 3px;
+    background: $color-border;
+    border-radius: $radius-full;
+    transition: background $transition-normal;
+
+    &--weak  { background: $color-danger; }
+    &--fair  { background: $color-warning; }
+    &--good  { background: $color-info; }
+    &--strong { background: $color-success; }
+  }
+
+  &__label {
+    font-size: 0.75rem;
+    font-family: $font-mono;
+    color: $color-text-3;
+    transition: color $transition-normal;
+  }
+}
