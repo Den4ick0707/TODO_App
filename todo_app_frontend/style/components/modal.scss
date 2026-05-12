@@ -1,0 +1,199 @@
+// ============================================
+// MODAL
+// ============================================
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px);
+  z-index: 300;
+  @include flex(row, center, center);
+  padding: $space-4;
+  animation: fadeIn $transition-fast;
+}
+
+.modal {
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-xl;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: $shadow-lg;
+  animation: slideUp $transition-normal;
+
+  &--sm { max-width: 360px; padding: $space-6; }
+
+  &__header {
+    @include flex(row, center, space-between);
+    padding: $space-6 $space-6 0;
+    margin-bottom: $space-5;
+  }
+
+  &__title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  &__close {
+    color: $color-text-3;
+    padding: $space-1;
+    border-radius: $radius-sm;
+    transition: all $transition-fast;
+
+    &:hover {
+      background: $color-surface-2;
+      color: $color-text;
+    }
+  }
+
+  &__text {
+    padding: 0 $space-6;
+    font-size: 0.875rem;
+    color: $color-text-2;
+    font-family: $font-mono;
+    margin-bottom: $space-5;
+  }
+
+  &__actions {
+    @include flex(row, center, flex-end, $space-3);
+    padding: $space-5 $space-6 $space-6;
+    border-top: 1px solid $color-border;
+    margin-top: $space-5;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+// ============================================
+// TASK FORM (inside modal)
+// ============================================
+
+.task-form {
+  padding: 0 $space-6;
+  @include flex(column, stretch, flex-start, $space-5);
+
+  &__field {
+    @include flex(column, stretch, flex-start, $space-2);
+  }
+
+  &__label {
+    font-size: 0.8rem;
+    font-family: $font-mono;
+    font-weight: 500;
+    color: $color-text-2;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+
+    .required { color: $color-accent; }
+  }
+
+  &__input,
+  &__textarea,
+  &__select {
+    width: 100%;
+    padding: $space-3 $space-4;
+    background: $color-bg-3;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    color: $color-text;
+    font-size: 0.9rem;
+    transition: border-color $transition-fast, box-shadow $transition-fast;
+
+    &::placeholder { color: $color-text-3; }
+
+    &:focus {
+      outline: none;
+      border-color: $color-accent;
+      box-shadow: 0 0 0 3px $color-accent-glow;
+    }
+  }
+
+  &__textarea {
+    resize: vertical;
+    min-height: 80px;
+    font-family: $font-mono;
+    font-size: 0.85rem;
+  }
+
+  &__select {
+    cursor: pointer;
+    option { background: $color-surface; }
+  }
+
+  &__error {
+    font-size: 0.78rem;
+    font-family: $font-mono;
+    color: $color-danger;
+  }
+}
+
+// ============================================
+// TOAST NOTIFICATIONS
+// ============================================
+
+.toast-container {
+  position: fixed;
+  bottom: $space-6;
+  right: $space-6;
+  @include flex(column, flex-end, flex-end, $space-3);
+  z-index: 400;
+  pointer-events: none;
+}
+
+.toast {
+  @include flex(row, center, flex-start, $space-3);
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  padding: $space-3 $space-5;
+  font-size: 0.875rem;
+  box-shadow: $shadow-lg;
+  pointer-events: auto;
+  animation: toastIn 0.3s ease;
+  max-width: 320px;
+
+  &__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  &--success {
+    border-left: 3px solid $color-success;
+    .toast__dot { background: $color-success; }
+  }
+
+  &--error {
+    border-left: 3px solid $color-danger;
+    .toast__dot { background: $color-danger; }
+  }
+
+  &--info {
+    border-left: 3px solid $color-info;
+    .toast__dot { background: $color-info; }
+  }
+
+  &--hide {
+    animation: toastOut 0.3s ease forwards;
+  }
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes toastOut {
+  to { opacity: 0; transform: translateX(20px); }
+}
