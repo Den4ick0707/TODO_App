@@ -6,7 +6,6 @@ const crypto = require('crypto');
 const { sendPasswordResetEmail } = require('../utils/mailer');
 
 async function registerUser({ username, email, password }) {
-    // Validation
     const emailCheck = validateEmail(email);
     if (!emailCheck.isValid) throw { status: 400, message: emailCheck.message };
 
