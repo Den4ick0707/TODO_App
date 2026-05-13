@@ -33,5 +33,5 @@ window.api = {
     getTask:     (id)   => request('GET',    `/tasks/${id}`),
     createTask:  (data) => request('POST',   '/tasks', data),
     updateTask:  (id, data) => request('PUT', `/tasks/${id}`, data),
-    deleteTask:  (id)   => request('DELETE', `/tasks/${id}`),
+    deleteTask:  (id)   => request('DELETE', `/tasks/${id}`)
 };

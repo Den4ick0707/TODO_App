@@ -7,7 +7,6 @@ import rename from 'gulp-rename';
 import sourcemaps from 'gulp-sourcemaps';
 import terser from 'gulp-terser';
 import concat from 'gulp-concat';
-import htmlmin from 'gulp-htmlmin';
 import browserSync from 'browser-sync';
 import del from 'del';
 
@@ -21,19 +20,19 @@ const paths = {
         dest:  'dist/css',
     },
     scripts: {
-        src:  ['js/*.js', 'js/**/*.js'],
+        src: [
+            'js/api.js',
+            'js/auth.js',
+            'js/auth-page.js',
+            'js/main.js',
+        ],
         dest: 'dist/js',
-    },
-    html: {
-        src:  'pages/*.html',
-        dest: 'dist/html',
     },
 };
 
 export async function clean() {
     return del(['dist']);
 }
-
 export function styles() {
     return gulp
         .src(paths.styles.src)
@@ -50,7 +49,7 @@ export function styles() {
 
 export function scripts() {
     return gulp
-        .src(paths.scripts.src, { sourcemaps: true })
+        .src(paths.scripts.src)
         .pipe(sourcemaps.init())
         .pipe(concat('main.js'))
         .pipe(gulp.dest(paths.scripts.dest))
@@ -60,27 +59,26 @@ export function scripts() {
         .pipe(gulp.dest(paths.scripts.dest))
         .pipe(bs.stream());
 }
-
-export function html() {
-    return gulp
-        .src(paths.html.src)
-        .pipe(htmlmin({ collapseWhitespace: true, removeComments: true }))
-        .pipe(gulp.dest(paths.html.dest));
-}
-
 export function serve() {
     bs.init({
-        server: { baseDir: './dist' },
-        startPath: '/html/auth.html',
+        server: {
+            baseDir: './',
+        },
+        startPath: '/pages/auth.html',
         port: 8080,
         open: true,
         notify: false,
+        middleware: [
+            (req, res, next) => {
+                res.setHeader('Content-Security-Policy', '');
+                next();
+            }
+        ],
     });
 
     gulp.watch(paths.styles.watch, styles);
-    gulp.watch(paths.scripts.src, scripts).on('change', bs.reload);
-    gulp.watch(paths.html.src).on('change', bs.reload);
+    gulp.watch('js/**/*.js', scripts).on('change', bs.reload);
+    gulp.watch('pages/*.html').on('change', bs.reload);
 }
-
-export const build   = gulp.series(clean, gulp.parallel(styles, scripts,html));
-export default        gulp.series(build, serve);
+export const build = gulp.series(clean, gulp.parallel(styles, scripts));
+export default      gulp.series(build, serve);

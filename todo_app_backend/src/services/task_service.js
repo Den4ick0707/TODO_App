@@ -2,56 +2,42 @@ const {getCollection} = require('../config/MongoDBContext');
 const ObjectId = require('mongodb').ObjectId;
 const TaskModel = require('../models/task_model');
 
-async function addTaskToDb(taskData) {
+async function addTaskToDb(taskData, userId) {
     const collection = await getCollection('task_list');
-
-    const taskToSave = new TaskModel.constructor(taskData);
+    const taskToSave = new TaskModel({ ...taskData, user_id: userId });
     const result = await collection.insertOne(taskToSave);
-
     return {_id: result.insertedId, ...taskToSave};
 }
 
-async function getAllTasksFromDb() {
+async function getAllTasksFromDb(userId) {
     const collection = await getCollection('task_list');
-    return await collection.find({}).toArray();
+    return await collection.find({ user_id: userId }).toArray();
 }
 
-
-async function getTaskByIdFromDb(targetId) {
-    console.log("Шукаємо ID:", targetId);
+async function getTaskByIdFromDb(targetId, userId) {
     const collection = await getCollection('task_list');
-
-    // Спробуй вивести сконструйований об'єкт
-    const query = { _id: new ObjectId(targetId.trim()) }; // trim() прибере випадкові пробіли
-    console.log("Запит до бази:", query);
-
-    const result_task = await collection.findOne(query);
-    console.log("Результат з бази:", result_task);
-
-    return result_task;
+    return await collection.findOne({
+        _id: new ObjectId(targetId.trim()),
+        user_id: userId
+    });
 }
 
-async function updateTaskInDb(id, updateInfo) {
-    try {
-        if (!ObjectId.isValid(id)) return null;
-
-        const collection = await getCollection('task_list');
-
-        const result = await collection.findOneAndUpdate(
-            { _id: new ObjectId(id) },
-            { $set: updateInfo },
-            { returnDocument: 'after' }
-        );
-
-        return result;
-    } catch (err) {
-        throw err;
-    }
+async function updateTaskInDb(id, updateInfo, userId) {
+    if (!ObjectId.isValid(id)) return null;
+    const collection = await getCollection('task_list');
+    return await collection.findOneAndUpdate(
+        { _id: new ObjectId(id), user_id: userId },
+        { $set: updateInfo },
+        { returnDocument: 'after' }
+    );
 }
 
-async function deleteTaskInDb(id) {
+async function deleteTaskInDb(id, userId) {
     const collection = await getCollection('task_list');
-    const result = await collection.deleteOne({_id: new ObjectId(id)});
+    const result = await collection.deleteOne({
+        _id: new ObjectId(id),
+        user_id: userId
+    });
     return result.deletedCount > 0;
 }
 

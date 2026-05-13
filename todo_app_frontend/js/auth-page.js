@@ -1,11 +1,9 @@
 // ============================================
 // AUTH PAGE — логіка сторінки auth.html
-// Запускається тільки якщо є елемент #loginStep
 // ============================================
 
 if (document.getElementById('loginStep')) {
 
-    // ---- Step navigation ----
     function showStep(stepId) {
         ['loginStep', 'registerStep', 'forgotStep'].forEach(id => {
             const el = document.getElementById(id);
@@ -16,9 +14,11 @@ if (document.getElementById('loginStep')) {
         const brand  = document.getElementById('authBrand');
         if (layout) layout.classList.toggle('auth-layout--centered', isForgot);
         if (brand)  brand.style.display = isForgot ? 'none' : '';
+
+        // Очищення статусів при переході
+        document.querySelectorAll('.auth-card__status').forEach(s => s.hidden = true);
     }
 
-    // ---- Navigation links ----
     const nav = {
         toRegister:           () => showStep('registerStep'),
         toLogin:              () => showStep('loginStep'),
@@ -32,11 +32,8 @@ if (document.getElementById('loginStep')) {
         if (el) el.addEventListener('click', (e) => { e.preventDefault(); fn(); });
     });
 
-    // ---- Password toggles ----
     setupPasswordToggle('loginPassword', 'toggleLoginPass');
     setupPasswordToggle('regPassword',   'toggleRegPass');
-
-    // ---- Strength meter ----
     setupStrengthMeter('regPassword');
 
     // ---- LOGIN ----
@@ -44,16 +41,14 @@ if (document.getElementById('loginStep')) {
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            clearFieldError('loginEmailField',    'loginEmailError');
+            clearFieldError('loginEmailField', 'loginEmailError');
             clearFieldError('loginPasswordField', 'loginPasswordError');
 
-            const email    = document.getElementById('loginEmail').value.trim();
+            const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
-            let hasError   = false;
 
-            if (!email)    { setFieldErr('loginEmailField',    'loginEmailError',    'Введіть email');  hasError = true; }
-            if (!password) { setFieldErr('loginPasswordField', 'loginPasswordError', 'Введіть пароль'); hasError = true; }
-            if (hasError) return;
+            if (!email) return setFieldErr('loginEmailField', 'loginEmailError', 'Введіть email');
+            if (!password) return setFieldErr('loginPasswordField', 'loginPasswordError', 'Введіть пароль');
 
             setLoading('loginBtn', true);
             try {
@@ -61,10 +56,7 @@ if (document.getElementById('loginStep')) {
                 window.location.href = '/pages/index.html';
             } catch (err) {
                 setLoading('loginBtn', false);
-                showCardStatus('loginStatus',
-                    err.status === 401 ? 'Невірний email або пароль' : (err.message || 'Помилка'),
-                    'error'
-                );
+                showCardStatus('loginStatus', err.status === 401 ? 'Невірний email або пароль' : err.message);
             }
         });
     }
@@ -74,25 +66,17 @@ if (document.getElementById('loginStep')) {
     if (registerForm) {
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            clearFieldError('usernameField',   'usernameError');
-            clearFieldError('regEmailField',   'regEmailError');
-            clearFieldError('regPasswordField','regPasswordError');
+            clearFieldError('usernameField', 'usernameError');
+            clearFieldError('regEmailField', 'regEmailError');
+            clearFieldError('regPasswordField', 'regPasswordError');
 
-            const username = document.getElementById('regUsername').value.trim();
+            const username = document.getElementById('username').value.trim();
             const email    = document.getElementById('regEmail').value.trim();
             const password = document.getElementById('regPassword').value;
-            let hasError   = false;
 
-            if (!username || username.length < 2) {
-                setFieldErr('usernameField', 'usernameError', 'Мін. 2 символи'); hasError = true;
-            }
-            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                setFieldErr('regEmailField', 'regEmailError', 'Невірний email'); hasError = true;
-            }
-            if (!password || password.length < 8) {
-                setFieldErr('regPasswordField', 'regPasswordError', 'Мін. 8 символів'); hasError = true;
-            }
-            if (hasError) return;
+            if (username.length < 2) return setFieldErr('usernameField', 'usernameError', 'Мін. 2 символи');
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return setFieldErr('regEmailField', 'regEmailError', 'Невірний email');
+            if (password.length < 8) return setFieldErr('regPasswordField', 'regPasswordError', 'Мін. 8 символів');
 
             setLoading('registerBtn', true);
             try {
@@ -102,7 +86,7 @@ if (document.getElementById('loginStep')) {
             } catch (err) {
                 setLoading('registerBtn', false);
                 if (err.status === 409) setFieldErr('regEmailField', 'regEmailError', 'Email вже зайнятий');
-                else showCardStatus('registerStatus', err.message || 'Помилка', 'error');
+                else showCardStatus('registerStatus', err.message || 'Помилка');
             }
         });
     }
@@ -122,12 +106,10 @@ if (document.getElementById('loginStep')) {
 
             setLoading('forgotBtn', true);
             try { await api.forgotPassword(email); } catch (_) {}
-            // завжди показуємо success (безпека — не розкриваємо чи існує юзер)
             const wrap    = document.getElementById('forgotFormWrap');
             const success = document.getElementById('forgotSuccess');
             if (wrap)    wrap.hidden    = true;
             if (success) success.hidden = false;
         });
     }
-
-} // end guard
+}
