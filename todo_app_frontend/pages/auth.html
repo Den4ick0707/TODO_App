@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow — Авторизація</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../dist/css/main.min.css">
+</head>
+<body class="auth-page">
+<div class="auth-layout" id="authLayout">
+    <div class="auth-layout__brand" id="authBrand">
+        <div class="brand">
+            <div class="brand__mark">
+                <span class="brand__square brand__square--1"></span>
+                <span class="brand__square brand__square--2"></span>
+                <span class="brand__square brand__square--3"></span>
+            </div>
+            <span class="brand__name">TaskFlow</span>
+        </div>
+        <div class="auth-layout__tagline">
+            <p class="auth-layout__tagline-line">Організуй.</p>
+            <p class="auth-layout__tagline-line">Виконуй.</p>
+            <p class="auth-layout__tagline-line auth-layout__tagline-line--accent">Досягай.</p>
+        </div>
+    </div>
+
+    <div class="auth-layout__panel">
+        <div class="auth-card">
+            <!-- Вхід -->
+            <div id="loginStep">
+                <div class="auth-card__header">
+                    <h1 class="auth-card__title">Вхід</h1>
+                    <p class="auth-card__subtitle">Введіть дані для входу</p>
+                </div>
+                <form class="auth-form" id="loginForm" novalidate>
+                    <div class="auth-form__field" id="loginEmailField">
+                        <label class="auth-form__label" for="loginEmail">Email</label>
+                        <input class="auth-form__input" type="email" id="loginEmail" placeholder="you@example.com" required>
+                        <span class="auth-form__error" id="loginEmailError"></span>
+                    </div>
+                    <div class="auth-form__field" id="loginPasswordField">
+                        <label class="auth-form__label" for="loginPassword">Пароль</label>
+                        <div class="auth-form__input-wrap">
+                            <input class="auth-form__input" type="password" id="loginPassword" placeholder="••••••••" required>
+                            <button type="button" class="auth-form__toggle-pass" id="toggleLoginPass">👁️</button>
+                        </div>
+                        <span class="auth-form__error" id="loginPasswordError"></span>
+                    </div>
+                    <div class="auth-form__row">
+                        <a href="#" id="toForgot" class="auth-form__link">Забули пароль?</a>
+                    </div>
+                    <button type="submit" class="btn btn--primary btn--full" id="loginBtn">
+                        <span class="btn__text">Увійти</span>
+                        <span class="btn__loader" hidden><span></span><span></span><span></span></span>
+                    </button>
+                    <p class="auth-form__switch">Немає акаунту? <a href="#" id="toRegister" class="auth-form__link">Зареєструватись</a></p>
+                </form>
+                <div class="auth-card__status" id="loginStatus" hidden></div>
+            </div>
+
+            <!-- Реєстрація -->
+            <div id="registerStep" hidden>
+                <div class="auth-card__header">
+                    <h1 class="auth-card__title">Створити акаунт</h1>
+                    <p class="auth-card__subtitle">Заповніть форму нижче</p>
+                </div>
+                <form class="auth-form" id="registerForm" novalidate>
+                    <div class="auth-form__field" id="usernameField">
+                        <label class="auth-form__label" for="username">Ім'я користувача</label>
+                        <input class="auth-form__input" type="text" id="username" placeholder="john_doe" required>
+                        <span class="auth-form__error" id="usernameError"></span>
+                    </div>
+                    <div class="auth-form__field" id="regEmailField">
+                        <label class="auth-form__label" for="regEmail">Email</label>
+                        <input class="auth-form__input" type="email" id="regEmail" placeholder="you@example.com" required>
+                        <span class="auth-form__error" id="regEmailError"></span>
+                    </div>
+                    <div class="auth-form__field" id="regPasswordField">
+                        <label class="auth-form__label" for="regPassword">Пароль</label>
+                        <div class="auth-form__input-wrap">
+                            <input class="auth-form__input" type="password" id="regPassword" placeholder="••••••••" required>
+                            <button type="button" class="auth-form__toggle-pass" id="toggleRegPass">👁️</button>
+                        </div>
+                        <div class="password-strength">
+                            <div class="password-strength__bars">
+                                <span class="password-strength__bar"></span>
+                                <span class="password-strength__bar"></span>
+                                <span class="password-strength__bar"></span>
+                                <span class="password-strength__bar"></span>
+                            </div>
+                            <span class="password-strength__label" id="strengthLabel"></span>
+                        </div>
+                        <span class="auth-form__error" id="regPasswordError"></span>
+                    </div>
+                    <button type="submit" class="btn btn--primary btn--full" id="registerBtn">
+                        <span class="btn__text">Зареєструватись</span>
+                        <span class="btn__loader" hidden><span></span><span></span><span></span></span>
+                    </button>
+                    <p class="auth-form__switch">Вже є акаунт? <a href="#" id="toLogin" class="auth-form__link">Увійти</a></p>
+                </form>
+                <div class="auth-card__status" id="registerStatus" hidden></div>
+            </div>
+
+            <!-- Відновлення пароля -->
+            <div id="forgotStep" hidden>
+                <div id="forgotFormWrap">
+                    <a href="#" id="backToLogin" class="auth-card__back">← Назад до входу</a>
+                    <div class="auth-card__header">
+                        <h1 class="auth-card__title">Забули пароль?</h1>
+                        <p class="auth-card__subtitle">Вкажіть email для інструкцій</p>
+                    </div>
+                    <form class="auth-form" id="forgotForm" novalidate>
+                        <div class="auth-form__field" id="forgotEmailField">
+                            <label class="auth-form__label" for="forgotEmail">Email</label>
+                            <input class="auth-form__input" type="email" id="forgotEmail" placeholder="you@example.com" required>
+                            <span class="auth-form__error" id="forgotEmailError"></span>
+                        </div>
+                        <button type="submit" class="btn btn--primary btn--full" id="forgotBtn">
+                            <span class="btn__text">Надіслати</span>
+                            <span class="btn__loader" hidden><span></span><span></span><span></span></span>
+                        </button>
+                    </form>
+                </div>
+                <div id="forgotSuccess" hidden>
+                    <div class="auth-card__success">
+                        <div class="auth-card__success-icon">✉️</div>
+                        <h2 class="auth-card__success-title">Перевірте пошту</h2>
+                        <p class="auth-card__success-text">Ми надіслали інструкції для скидання пароля.</p>
+                        <a href="#" id="backToLoginFromSuccess" class="btn btn--ghost btn--full">Повернутись до входу</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../js/api.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/auth-page.js"></script>
+</body>
+</html>

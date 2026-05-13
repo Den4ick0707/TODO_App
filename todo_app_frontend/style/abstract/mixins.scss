@@ -1,0 +1,53 @@
+// ============================================
+// MIXINS
+// ============================================
+
+@mixin flex($dir: row, $align: center, $justify: flex-start, $gap: 0) {
+  display: flex;
+  flex-direction: $dir;
+  align-items: $align;
+  justify-content: $justify;
+  @if $gap != 0 { gap: $gap; }
+}
+
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin focus-ring {
+  outline: 2px solid $color-accent;
+  outline-offset: 2px;
+}
+
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@mixin respond-to($bp) {
+  @if $bp == 'sm'  { @media (max-width: 640px)  { @content; } }
+  @if $bp == 'md'  { @media (max-width: 768px)  { @content; } }
+  @if $bp == 'lg'  { @media (max-width: 1024px) { @content; } }
+}
+
+@mixin card {
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+}
+
+@mixin scrollbar {
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb {
+    background: $color-border-2;
+    border-radius: $radius-full;
+  }
+}
